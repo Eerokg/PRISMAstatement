@@ -13,12 +13,14 @@
 #' @param qualitative Studies included in qualitative analysis
 #' @param quantitative Studies included in quantitative synthesis
 #'   (meta-analysis)
-#' @param databases A list with a length of two containing a character vector with names of
-#' databases and a numeric vector of a matching length containing the number of articles found in each database.
+#' @param databases A list with a length of two containing a character vector
+#' with names of databases and a numeric vector of a matching length containing
+#' the number of articles found in each database.
 #' The default is \code{NULL} with no printed databases. See examples.
-#' @param reasons A list with a length of two containing a character vector with reasons and
-#' a numeric vector of a matching length containing the number of articles excluded with each reason.
-#' Use \code{\\l} to add a line break in a reason.
+#' @param reasons A list with a length of two containing a character vector
+#' with reasons and a numeric vector of a matching length containing the number
+#' of articles excluded with each reason.
+#' Use \code{\\l} for line breaks.
 #' The default is \code{NULL} with no printed reasons. See examples.
 #'
 #' @param labels \code{NULL} is the default, but if a named list of character
@@ -49,8 +51,9 @@
 #' prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107,
 #'        labels = list(found = "FOUND"))
 #' # adding databases and reasons
-#' r <- list(c("This is a reason", "Another reason", "A third rather long reason\\l that needs a line break"),
-#' c(12, 11, 1))
+#' r <- list(c("This is a reason", "Another reason",
+#'             "A third rather long reason\\l that needs a line break"),
+#'           c(12, 11, 1))
 #'
 #' d <- list(c("MEDLINE", "CINAHL", "EMBASE"),
 #'          c(1013, 101, 42))
