@@ -63,6 +63,8 @@ prisma <- function(found,
                    full_text_exclusions,
                    qualitative,
                    quantitative = NULL,
+                   databases = NULL,
+                   reasons = NULL,
                    labels = NULL,
                    extra_dupes_box = FALSE,
                    ...,
@@ -78,6 +80,8 @@ prisma <- function(found,
                  full_text_exclusions = full_text_exclusions,
                  qualitative = qualitative,
                  quantitative = quantitative,
+                 databases = databases,
+                 reasons = reasons,
                  labels = labels,
                  extra_dupes_box = extra_dupes_box,
                  dpi = dpi,
@@ -97,6 +101,8 @@ prisma_graph <- function(found,
                          full_text_exclusions,
                          qualitative,
                          quantitative = NULL,
+                         databases = NULL,
+                         reasons = NULL,
                          labels = NULL,
                          extra_dupes_box = FALSE,
                          ...,
@@ -139,19 +145,48 @@ prisma_graph <- function(found,
   # exclusions can't be greater than what they excluded from
   stopifnot(screen_exclusions <= screened)
   stopifnot(full_text_exclusions <= full_text)
+  # reasons and databases should be a list
+  stopifnot(is.null(reasons) || is.list(reasons))
+  stopifnot(is.null(databases) || is.list(databases))
+  # with a chararacter and a numeric vector
+  stopifnot(is.character(reasons[[1]]) || is.null(reasons))
+  stopifnot(is.numeric(reasons[[2]]) || is.null(reasons))
+  stopifnot(is.character(databases[[1]]) || is.null(databases))
+  stopifnot(is.numeric(databases[[2]]) || is.null(databases))
+  # reasons and databases should have a length of two or 0
+  stopifnot(length(reasons) == 2 || length(reasons) == 0)
+  stopifnot(length(databases) == 2 || length(databases) == 0)
+  # both vectors in the list should be of an equal length
+  stopifnot(length(reasons[[1]]) ==  length(reasons[[2]]))
+  stopifnot(length(databases[[1]]) ==  length(databases[[2]]))
   if (screened - screen_exclusions != full_text)
     warning("After screening exclusions, a different number of remaining ",
             "full-text articles is stated.")
   if (full_text - full_text_exclusions != qualitative)
     warning("After full-text exclusions, a different number of remaining ",
             "articles for qualitative synthesis is stated.")
+  if (sum(reasons[[2]]) != full_text_exclusions & !is.null(reasons))
+    warning("The sum of the excluded articles with reasons ", paste(paren(sum(reasons[[2]]))),
+            " is not ",
+            "equal to the stated amount of full-text exclusions ",
+            paste0(paren(full_text_exclusions), "."))
+  if (sum(databases[[2]]) != found & !is.null(databases))
+    warning("The sum of the found articles in named databases ", paste(paren(sum(databases[[2]]))),
+            " is not ",
+            "equal to the stated amount of found articles ",
+            paste0(paren(found), "."))
   # apostrophes need to be replaced for grViz
+  if(!is.null(databases)) databases[[1]] <- gsub("'", "&rsquo;", databases[[1]])
+  if(!is.null(reasons)) reasons[[1]] <- gsub("'", "&rsquo;", reasons[[1]])
   labels <- lapply(labels, gsub, pattern = "'", replace = "&rsquo;")
   dupes <- found + found_other - no_dupes
   labels_orig <- list(
-    found = pnl("Records identified through",
-                "database searching",
-                paren(found)),
+    found = paste0(pnl("Records identified through",
+                       "database searching"),
+                   ifelse(!is.null(databases),
+                          paste0(":\n", paste(databases[[1]], paren(databases[[2]]), collapse = "\n"), "\n"),
+                          "\n"),
+                   paste0(paren(found))),
     found_other = pnl("Additional records identified",
                       "through other sources",
                       paren(found_other)),
@@ -163,9 +198,12 @@ prisma_graph <- function(found,
                     "for eligibility",
                     paren(full_text)),
     full_text_exclusions =
-      pnl("Full-text articles excluded,",
-          "with reasons",
-          paren(full_text_exclusions)),
+      paste0(pnl("Full-text articles excluded,",
+                 "with reasons"),
+             ifelse(!is.null(reasons),
+                    paste0(":\n", paste(reasons[[1]], paren(reasons[[2]]), collapse = "\\l"), "\\l"),
+                    "\n"),
+             paste0(paren(full_text_exclusions))),
     qualitative = pnl("Studies included in qualitative synthesis",
                       paren(qualitative)),
     quantitative = pnl("Studies included in",
