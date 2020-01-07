@@ -105,6 +105,38 @@ test_that("use an apostrophe in a label", {
     regexp = NA)
 })
 
+test_that("add reasons", {
+  expect_error(
+    prisma(found = 20,
+           found_other = 5,
+           no_dupes = 20,
+           screened = 20,
+           screen_exclusions = 10,
+           full_text = 10,
+           full_text_exclusions = 5,
+           qualitative = 5,
+           quantitative = 5,
+           reasons = list(c("I don't understand the statistics", "I don't like the authors"),
+                          c(3, 2))),
+    regexp = NA)
+})
+
+test_that("add databases", {
+  expect_error(
+    prisma(found = 20,
+           found_other = 5,
+           no_dupes = 20,
+           screened = 20,
+           screen_exclusions = 10,
+           full_text = 10,
+           full_text_exclusions = 5,
+           qualitative = 5,
+           quantitative = 5,
+           databases = list(c("MEDLINE", "EMBASE"),
+                            c(11, 9))),
+    regexp = NA)
+})
+
 test_that("numbers must work together", {
   expect_error(prisma(1, 2, 3, 4, 5, 6, 7, 8, 9))
   expect_warning(prisma(1000, 20, 270, 270, 10, 260, 19, 240, 107))
