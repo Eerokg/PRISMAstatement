@@ -89,7 +89,8 @@ prisma <- function(found,
                    extra_dupes_box = FALSE,
                    ...,
                    dpi = 72,
-                   font_size = 10) {
+                   font_size = 10,
+                   font = "times") {
   DiagrammeR::grViz(
     prisma_graph(found = found,
                  found_other = found_other,
@@ -106,6 +107,7 @@ prisma <- function(found,
                  extra_dupes_box = extra_dupes_box,
                  dpi = dpi,
                  font_size = font_size,
+                 font = font,
                  ...)
   )
 }
@@ -127,7 +129,8 @@ prisma_graph <- function(found,
                          extra_dupes_box = FALSE,
                          ...,
                          dpi = 72,
-                         font_size = 10) {
+                         font_size = 10,
+                         font = "times") {
   stopifnot(length(found) == 1)
   stopifnot(length(found_other) == 1)
   stopifnot(length(no_dupes) == 1)
@@ -246,7 +249,7 @@ prisma_graph <- function(found,
        dups [label="%s"]; {rank=same; nodups dups}',
       labels$no_dupes, labels$dupes)
 
-  quant_box <- "/* test */"
+  quant_box <- "/**/"
   if (!is.null(quantitative))
     quant_box <- sprintf(
       'qual -> quant
@@ -254,8 +257,8 @@ prisma_graph <- function(found,
       labels$quantitative)
 
   dot_template <- 'digraph prisma {
-    node [shape="box", fontsize = %d];
-    graph [splines=ortho, nodesep=1, dpi = %d]
+    node [shape="box", fontsize = %d, fontname = "%s", margin="0.2,0.1"];
+    graph [splines=ortho, nodesep=0.3, dpi = %d]
     a -> nodups;
     b -> nodups;
     a [label="%s"];
@@ -274,6 +277,7 @@ prisma_graph <- function(found,
   }'
     sprintf(dot_template,
             font_size,
+            font,
             dpi,
             labels$found,
             labels$found_other,
