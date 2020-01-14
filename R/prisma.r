@@ -11,8 +11,8 @@
 #' @param full_text Full-text articles assessed for eligibility
 #' @param full_text_exclusions Full-text articles excluded with reasons
 #' @param qualitative Studies included in qualitative analysis
-#' @param quantitative Studies included in quantitative synthesis
-#'   (meta-analysis)
+#' @param quantitative Studies included in quantitative synthesis (meta-analysis).
+#' If no input, no quantitative box is printed.
 #' @param databases A list with a length of two containing a character vector
 #' with names of databases and a numeric vector of a matching length containing
 #' the number of articles found in each database.
@@ -25,7 +25,7 @@
 #'
 #' @param labels \code{NULL} is the default, but if a named list of character
 #'   strings, the box matching each name will get the corresponding label. See
-#'   examples.
+#'   examples. Only the text is changed, the numbers stay the same.
 #' @param extra_dupes_box Single logical value, default is \code{FALSE} which
 #'   corresponds to the example 2009 PRISMA Statement Flow Chart. If
 #'   \code{TRUE}, then an additional box will be presented indicating the number
@@ -41,10 +41,11 @@
 #'   this setting tends to truncate the graph. On the other hand, leaving the
 #'   DPI at 72 and increasing both height and width appears to consistently give
 #'   higher resolution images.
-#' @param font_size integer font size in points, default is 10. `DiagrammeR` via
+#' @param font_size Integer font size in points, default is 10. `DiagrammeR` via
 #'   `htmlwidgets` should scale the boxes to include the text no matter what
 #'   size font is used. However, the heuristics are not perfect, so tweaking the
 #'   font size here may help prepare for publication.
+#' @param font A character string with a font name. The default is \code{'times'}.
 #' @source \url{http://prisma-statement.org/PRISMAStatement/FlowDiagram}
 #' @examples
 #' prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107)
@@ -62,8 +63,8 @@
 #'
 #' prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107, dpi = 24)
 #' prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107, extra_dupes_box = TRUE)
-#' # vary the font size
-#' prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107, font_size = 6)
+#' # vary the font size and face
+#' prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107, font_size = 6, font = 'Helvetica')
 #' prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107, font_size = 60)
 #' # giving impossible numbers should cause an error
 #' \dontrun{
@@ -182,6 +183,8 @@ prisma_graph <- function(found,
   # both vectors in the list should be of an equal length
   stopifnot(length(reasons[[1]]) ==  length(reasons[[2]]))
   stopifnot(length(databases[[1]]) ==  length(databases[[2]]))
+  # font needs to be a character string
+  stopifnot(is.character(font))
   if (screened - screen_exclusions != full_text)
     warning("After screening exclusions, a different number of remaining ",
             "full-text articles is stated.")
