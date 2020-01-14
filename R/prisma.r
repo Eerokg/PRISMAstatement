@@ -224,7 +224,8 @@ prisma_graph <- function(found,
                     paste0(":\n", paste(reasons[[1]], paren(reasons[[2]]), collapse = "\\l"), "\\l"),
                     "\n"),
              paste0(paren(full_text_exclusions))),
-    qualitative = pnl("Studies included in qualitative synthesis",
+    qualitative = pnl("Studies included in",
+                      "qualitative synthesis",
                       paren(qualitative)),
     quantitative = pnl("Studies included in",
                        "quantitative synthesis",
@@ -245,6 +246,13 @@ prisma_graph <- function(found,
        dups [label="%s"]; {rank=same; nodups dups}',
       labels$no_dupes, labels$dupes)
 
+  quant_box <- "/* test */"
+  if (!is.null(quantitative))
+    quant_box <- sprintf(
+      'qual -> quant
+       quant [label="%s"];',
+      labels$quantitative)
+
   dot_template <- 'digraph prisma {
     node [shape="box", fontsize = %d];
     graph [splines=ortho, nodesep=1, dpi = %d]
@@ -261,9 +269,8 @@ prisma_graph <- function(found,
     ft [label="%s"];
     {rank=same; ft ftex}
     ftex [label="%s"];
-    qual -> quant
     qual [label="%s"];
-    quant [label="%s"];
+    %s
   }'
     sprintf(dot_template,
             font_size,
@@ -276,7 +283,7 @@ prisma_graph <- function(found,
             labels$full_text,
             labels$full_text_exclusions,
             labels$qualitative,
-            labels$quantitative)
+            quant_box)
 }
 
 paren <- function(n)
