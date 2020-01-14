@@ -8,15 +8,43 @@
 \url{http://prisma-statement.org/PRISMAStatement/FlowDiagram}
 }
 \usage{
-prisma(found, found_other, no_dupes, screened, screen_exclusions,
-  full_text, full_text_exclusions, qualitative, quantitative = NULL,
-  labels = NULL, extra_dupes_box = FALSE, ..., dpi = 72,
-  font_size = 10)
+prisma(
+  found,
+  found_other,
+  no_dupes,
+  screened,
+  screen_exclusions,
+  full_text,
+  full_text_exclusions,
+  qualitative,
+  quantitative = NULL,
+  databases = NULL,
+  reasons = NULL,
+  labels = NULL,
+  extra_dupes_box = FALSE,
+  ...,
+  dpi = 72,
+  font_size = 10
+)
 
-prisma_graph(found, found_other, no_dupes, screened, screen_exclusions,
-  full_text, full_text_exclusions, qualitative, quantitative = NULL,
-  labels = NULL, extra_dupes_box = FALSE, ..., dpi = 72,
-  font_size = 10)
+prisma_graph(
+  found,
+  found_other,
+  no_dupes,
+  screened,
+  screen_exclusions,
+  full_text,
+  full_text_exclusions,
+  qualitative,
+  quantitative = NULL,
+  databases = NULL,
+  reasons = NULL,
+  labels = NULL,
+  extra_dupes_box = FALSE,
+  ...,
+  dpi = 72,
+  font_size = 10
+)
 }
 \arguments{
 \item{found}{Records found through database searching}
@@ -37,6 +65,17 @@ prisma_graph(found, found_other, no_dupes, screened, screen_exclusions,
 
 \item{quantitative}{Studies included in quantitative synthesis
 (meta-analysis)}
+
+\item{databases}{A list with a length of two containing a character vector
+with names of databases and a numeric vector of a matching length containing
+the number of articles found in each database.
+The default is \code{NULL} with no printed databases. See examples.}
+
+\item{reasons}{A list with a length of two containing a character vector
+with reasons and a numeric vector of a matching length containing the number
+of articles excluded with each reason.
+Use \code{\\l} for line breaks.
+The default is \code{NULL} with no printed reasons. See examples.}
 
 \item{labels}{\code{NULL} is the default, but if a named list of character
 strings, the box matching each name will get the corresponding label. See
@@ -79,6 +118,16 @@ PRISMA statement.
 prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107)
 prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107,
        labels = list(found = "FOUND"))
+# adding databases and reasons
+r <- list(c("This is a reason", "Another reason",
+            "A third rather long reason\\\\l that needs a line break"),
+          c(12, 11, 1))
+
+d <- list(c("MEDLINE", "CINAHL", "EMBASE"),
+         c(1013, 101, 42))
+
+prisma(1156, 9, 742, 742, 692, 50, 24, 26, databases = d, reasons = r)
+
 prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107, dpi = 24)
 prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107, extra_dupes_box = TRUE)
 # vary the font size

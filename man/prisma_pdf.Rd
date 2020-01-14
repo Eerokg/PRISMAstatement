@@ -7,8 +7,7 @@
 \usage{
 prisma_pdf(x, filename = "prisma.pdf")
 
-prisma_export(x, filename = "prisma.png", rsvg_fun = rsvg::rsvg_png,
-  ...)
+prisma_export(x, filename = "prisma.png", rsvg_fun = rsvg::rsvg_png, ...)
 }
 \arguments{
 \item{x}{output of call to \code{prisma}}

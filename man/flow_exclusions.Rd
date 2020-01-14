@@ -5,19 +5,35 @@
 \alias{flow_exclusions_dot}
 \title{Generic exclusions flow chart (beta)}
 \usage{
-flow_exclusions(incl_counts, total_label = "Total",
+flow_exclusions(
+  incl_counts,
+  total_label = "Total",
   incl_labels = LETTERS[seq_len(length(incl_counts) - 1)],
-  excl_labels = paste("Not ", incl_labels), show_count = TRUE,
-  percent_of_total = FALSE, percent_of_prev = FALSE,
-  percent_args = list(), format_args = list(), font_size = NULL,
-  dpi = NULL, ...)
+  excl_labels = paste("Not ", incl_labels),
+  show_count = TRUE,
+  percent_of_total = FALSE,
+  percent_of_prev = FALSE,
+  percent_args = list(),
+  format_args = list(),
+  font_size = NULL,
+  dpi = NULL,
+  ...
+)
 
-flow_exclusions_dot(incl_counts, total_label = "Total",
+flow_exclusions_dot(
+  incl_counts,
+  total_label = "Total",
   incl_labels = LETTERS[seq_len(length(incl_counts) - 1)],
-  excl_labels = paste("Not ", incl_labels), show_count = TRUE,
-  percent_of_total = FALSE, percent_of_prev = FALSE,
-  percent_args = list(), format_args = list(), font_size = NULL,
-  dpi = NULL, ...)
+  excl_labels = paste("Not ", incl_labels),
+  show_count = TRUE,
+  percent_of_total = FALSE,
+  percent_of_prev = FALSE,
+  percent_args = list(),
+  format_args = list(),
+  font_size = NULL,
+  dpi = NULL,
+  ...
+)
 }
 \arguments{
 \item{percent_args}{\code{list} of arguments to pass to \code{scales::percent} for
