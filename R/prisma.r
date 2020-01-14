@@ -203,41 +203,56 @@ prisma_graph <- function(found,
   if(!is.null(reasons)) reasons[[1]] <- gsub("'", "&rsquo;", reasons[[1]])
   labels <- lapply(labels, gsub, pattern = "'", replace = "&rsquo;")
   dupes <- found + found_other - no_dupes
-  labels_orig <- list(
-    found = paste0(pnl("Records identified through",
-                       "database searching"),
+
+  labeltext <- list(
+    found = pnl("Records identified through",
+                  "database searching"),
+    found_other = pnl("Additional records identified",
+                      "through other sources"),
+    no_dupes = pnl("Records after duplicates removed"),
+    dupes = pnl("Duplicates excluded"),
+    screened = pnl("Records screened"),
+    screen_exclusions = pnl("Records excluded"),
+    full_text = pnl("Full-text articles assessed",
+                    "for eligibility"),
+    full_text_exclusions = pnl("Full-text articles excluded,",
+                                "with reasons"),
+    qualitative = pnl("Studies included in",
+                      "qualitative synthesis"),
+    quantitative = pnl("Studies included in",
+                       "quantitative synthesis",
+                       "(meta-analysis)")
+                  )
+
+  for (l in names(labels))
+    labeltext[[l]] <- labels[[l]]
+  labels <- labeltext
+
+  labels <- list(
+    found = paste0(pnl(labels$found),
                    ifelse(!is.null(databases),
                           paste0(":\n", paste(databases[[1]], paren(databases[[2]]), collapse = "\n"), "\n"),
                           "\n"),
                    paste0(paren(found))),
-    found_other = pnl("Additional records identified",
-                      "through other sources",
+    found_other = pnl(labels$found_other,
                       paren(found_other)),
-    no_dupes = pnl("Records after duplicates removed", paren(no_dupes)),
-    dupes = pnl("Duplicates excluded", paren(dupes)),
-    screened = pnl("Records screened", paren(screened)),
-    screen_exclusions = pnl("Records excluded", paren(screen_exclusions)),
-    full_text = pnl("Full-text articles assessed",
-                    "for eligibility",
+    no_dupes = pnl(labels$no_dupes, paren(no_dupes)),
+    dupes = pnl(labels$dupes, paren(dupes)),
+    screened = pnl(labels$screened, paren(screened)),
+    screen_exclusions = pnl(labels$screen_exclusions, paren(screen_exclusions)),
+    full_text = pnl(labels$full_text,
                     paren(full_text)),
     full_text_exclusions =
-      paste0(pnl("Full-text articles excluded,",
-                 "with reasons"),
+      paste0(pnl(labels$full_text_exclusions),
              ifelse(!is.null(reasons),
                     paste0(":\n", paste(reasons[[1]], paren(reasons[[2]]), collapse = "\\l"), "\\l"),
                     "\n"),
              paste0(paren(full_text_exclusions))),
-    qualitative = pnl("Studies included in",
-                      "qualitative synthesis",
+    qualitative = pnl(labels$qualitative,
                       paren(qualitative)),
-    quantitative = pnl("Studies included in",
-                       "quantitative synthesis",
-                       "(meta-analysis)",
+    quantitative = pnl(labels$quantitative,
                        paren(quantitative))
   )
-  for (l in names(labels))
-    labels_orig[[l]] <- labels[[l]]
-  labels <- labels_orig
   dupes_box <- sprintf(
     'nodups -> incex;
     nodups [label="%s"];',
