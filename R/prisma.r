@@ -78,11 +78,11 @@
 prisma <- function(found,
                    found_other,
                    no_dupes,
-                   screened,
-                   screen_exclusions,
-                   full_text,
-                   full_text_exclusions,
-                   qualitative,
+                   screened = NULL,
+                   screen_exclusions = NULL,
+                   full_text = NULL,
+                   full_text_exclusions = NULL,
+                   qualitative = NULL,
                    quantitative = NULL,
                    databases = NULL,
                    reasons = NULL,
@@ -91,7 +91,8 @@ prisma <- function(found,
                    ...,
                    dpi = 72,
                    font_size = 10,
-                   font = "times") {
+                   font = "times",
+                   import = NULL) {
   DiagrammeR::grViz(
     prisma_graph(found = found,
                  found_other = found_other,
@@ -109,6 +110,7 @@ prisma <- function(found,
                  dpi = dpi,
                  font_size = font_size,
                  font = font,
+                 import = import,
                  ...)
   )
 }
@@ -118,11 +120,11 @@ prisma <- function(found,
 prisma_graph <- function(found,
                          found_other,
                          no_dupes,
-                         screened,
-                         screen_exclusions,
-                         full_text,
-                         full_text_exclusions,
-                         qualitative,
+                         screened = NULL,
+                         screen_exclusions = NULL,
+                         full_text = NULL,
+                         full_text_exclusions = NULL,
+                         qualitative = NULL,
                          quantitative = NULL,
                          databases = NULL,
                          reasons = NULL,
@@ -131,7 +133,25 @@ prisma_graph <- function(found,
                          ...,
                          dpi = 72,
                          font_size = 10,
-                         font = "times") {
+                         font = "times",
+                         import = NULL) {
+
+  if(!is.null(import)) {
+    if (!is.null(import$abs_n)) {
+      screened <- import$abs_n
+      screen_exclusions <- import$abs_excl
+    }
+    full_text <- import$ft_n
+    full_text_exclusions <- import$ft_excl
+    qualitative <- import$ft_n - import$ft_excluded
+    for(i in seq_along(import$reasons$Var1))
+      import$reasons$Var1[i] <- paste(strwrap(import$reasons$Var1[i],
+                                                width = 30,
+                                                simplify = TRUE),
+                                        collapse = "\\l")
+    reasons <- list(reasons = import$reasons$Var1, n = import$reasons$Freq)
+  }
+
   stopifnot(length(found) == 1)
   stopifnot(length(found_other) == 1)
   stopifnot(length(no_dupes) == 1)
@@ -201,10 +221,13 @@ prisma_graph <- function(found,
             " is not ",
             "equal to the stated amount of found articles ",
             paste0(paren(found), "."))
+
   # apostrophes need to be replaced for grViz
   if(!is.null(databases)) databases[[1]] <- gsub("'", "&rsquo;", databases[[1]])
   if(!is.null(reasons)) reasons[[1]] <- gsub("'", "&rsquo;", reasons[[1]])
   labels <- lapply(labels, gsub, pattern = "'", replace = "&rsquo;")
+
+
   dupes <- found + found_other - no_dupes
 
   labeltext <- list(
@@ -288,7 +311,7 @@ prisma_graph <- function(found,
     {rank=same; incex ex}
     ft -> {qual; ftex};
     ft [label="%s"];
-    {rank=same; ft ftex}
+    {rank=same; ranksep=0.1; ft ftex}
     ftex [label="%s"];
     qual [label="%s"];
     %s
