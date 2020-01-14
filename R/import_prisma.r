@@ -41,6 +41,7 @@ import_prisma <- function(ft, abs = NULL, reviewer = NULL){
   reasons <- as.data.frame(table(as.factor(reasons)))
   reasons <- reasons[order(-reasons$Freq),]
   reasons <- list(abs_n = abs_n, abs_excluded = abs_excl, ft_n = ft_n, ft_excluded = ft_excl, reasons = reasons)
+  reasons$reasons$Var1 <- as.character(reasons$reasons$Var1)
   attr(reasons, "class") <- "prisma_import"
   if(reasons$ft_excluded != sum(reasons$reasons$Freq))
     stop("There are exclusions without reasons. Add missing reasons and try again!")
