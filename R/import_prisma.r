@@ -50,7 +50,7 @@ import_prisma <- function(ft, abs = NULL, reviewer = NULL){
 #' @method print prisma_import
 #' @export
 print.prisma_import <- function(x, ...) {
-  cat("Imported data:\n", rep_len("*", 10))
+  cat("Imported data:\n")
   if(!is.null(x$abs_n)) {
     cat("Articles (without duplicates):", x$abs_n, "\n")
     cat("Excluded abstracts:", x$abs_excluded, "\n")
